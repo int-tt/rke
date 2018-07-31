@@ -1,9 +1,16 @@
 package aws
 
-import "github.com/rancher/types/apis/management.cattle.io/v3"
+import (
+	"bytes"
+	"fmt"
+
+	"github.com/go-ini/ini"
+	"github.com/rancher/types/apis/management.cattle.io/v3"
+)
 
 type CloudProvider struct {
-	Name string
+	Config *v3.AWSCloudProvider
+	Name   string
 }
 
 const (
@@ -15,7 +22,11 @@ func GetInstance() *CloudProvider {
 }
 
 func (p *CloudProvider) Init(cloudProviderConfig v3.CloudProvider) error {
+	if cloudProviderConfig.AWSCloudProvider == nil {
+		return fmt.Errorf("AWS Cloud Provider Config is empty")
+	}
 	p.Name = AWSCloudProviderName
+	p.Config = cloudProviderConfig.AWSCloudProvider
 	return nil
 }
 
@@ -24,5 +35,18 @@ func (p *CloudProvider) GetName() string {
 }
 
 func (p *CloudProvider) GenerateCloudConfigFile() (string, error) {
-	return "", nil
+	iniFile := ini.Empty()
+	section, err := iniFile.NewSection("Global")
+	if err != nil {
+		return "", err
+	}
+	if err = section.ReflectFrom(p.Config); err != nil {
+		return "", err
+	}
+	buf := &bytes.Buffer{}
+	_, err = iniFile.WriteTo(buf)
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }
