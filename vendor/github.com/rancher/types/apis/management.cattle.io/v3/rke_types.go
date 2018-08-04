@@ -573,9 +573,9 @@ type AWSCloudProvider struct {
 	RoleARN string `yaml:"role_arn" json:"role_arn,omitempty" ini:"role_arn,omitempty"`
 
 	// KubernetesClusterTag is the legacy cluster id we'll use to identify our cluster resources
-	KubernetesClusterTag string `yaml:"kubernetes_cluster_tag" json:"kubernetes_cluster_tag,omitempty" ini:"kubernetes_cluster_tag,omitempty"`
+	KubernetesClusterTag string `yaml:"kubernetesClusterTag" json:"kubernetes_cluster_tag,omitempty" ini:"KubernetesClusterTag,omitempty"`
 	// KubernetesClusterID is the cluster id we'll use to identify our cluster resources
-	KubernetesClusterID string `yaml:"kubernetes_cluster_id" json:"kubernetes_cluster_id,omitempty" ini:"kubernetes_cluster_id,omitempty"`
+	KubernetesClusterID string `yaml:"kubernetesClusterID" json:"kubernetes_cluster_id,omitempty" ini:"KubernetesClusterID,omitempty"`
 
 	//The aws provider creates an inbound rule per load balancer on the node security
 	//group. However, this can run into the AWS security group rule limit of 50 if
